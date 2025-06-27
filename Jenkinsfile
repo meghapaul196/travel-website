@@ -22,7 +22,7 @@ pipeline {
                 script {
                     // Clone the repository using your provided GitHub URL.
                     // Since it's a public repository, no specific credentials are needed here.
-                    git branch: 'main', url: 'https://github.com/meghapaul196/travel-website.git' // <--- UPDATED HERE
+                    git branch: 'main', url: 'https://github.com/meghapaul196/travel-website.git'
                 }
             }
         }
@@ -53,28 +53,28 @@ pipeline {
             }
         }
 
-   stage('SonarQube Analysis') {
-    steps {
-        script {
-            withSonarQubeEnv('Sonarkey') {
-                sh '''
-                    sonar-scanner
-                    -Dsonar.projectKey=travelaja
-                    -Dsonar.projectName="Travelaja Website"
-                    -Dsonar.sources=.
-                    -Dsonar.exclusions=bookings.json,node_modules/**
-                    -Dsonar.sourceEncoding=UTF-8
-                    -Dsonar.javascript.linter.eslint.reportPaths=eslint-report.json
-                    -Dsonar.javascript.node.maxspace=2048
-                '''
+        // Corrected SonarQube Analysis Stage
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    withSonarQubeEnv('Sonarkey') {
+                        sh '''
+                            sonar-scanner
+                            -Dsonar.projectKey=travelaja
+                            -Dsonar.projectName="Travelaja Website"
+                            -Dsonar.sources=.
+                            -Dsonar.exclusions=bookings.json,node_modules/**
+                            -Dsonar.sourceEncoding=UTF-8
+                            -Dsonar.javascript.linter.eslint.reportPaths=eslint-report.json
+                            -Dsonar.javascript.node.maxspace=2048
+                        '''
+                    }
+                }
             }
-        }
-    }
-}
-}
+            // The 'post' block for a stage MUST be here,
+            // directly inside the stage block, at the same level as 'steps'.
             post {
                 failure {
-                    // You can add logic here to fail the build if Quality Gate fails
                     echo 'SonarQube analysis failed or Quality Gate not passed.'
                 }
             }
@@ -93,12 +93,8 @@ pipeline {
             steps {
                 script {
                     echo 'Starting deployment...'
-                    // Example: Starting the Node.js server
-                    // This assumes the Jenkins agent is the deployment target and it has Node.js installed.
-                    // This is suitable if your server.js is meant to be run directly for production.
-                    // For production, consider using a process manager like PM2 or systemd.
-                    sh 'kill $(lsof -t -i:5500) || true' // Kill any existing process on port 5500
-                    sh 'nohup node server.js > server.log 2>&1 &' // Run server in background, log output
+                    sh 'kill $(lsof -t -i:5500) || true'
+                    sh 'nohup node server.js > server.log 2>&1 &'
                     echo 'Node.js server started on port 5500.'
                     echo 'Deployment complete!'
                 }

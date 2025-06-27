@@ -59,15 +59,15 @@ pipeline {
         }
 
         stage('Docker Build & Run') {
-    steps {
-        echo 'Building Docker image and starting container...'
-        bat 'docker build -t travelaja .'
-        bat 'docker stop travelaja_container || echo Container not running'
-        bat 'docker rm travelaja_container || echo Container not found'
-        bat 'docker run -d -p 5500:5500 --name travelaja_container travelaja'
-    }
-}
-
+            steps {
+                echo 'Building Docker image and starting container...'
+                bat 'docker build -t travelaja .'
+                bat 'docker stop travelaja_container || echo Container not running'
+                bat 'docker rm travelaja_container || echo Container not found'
+                bat 'docker run -d -p 5500:5500 --name travelaja_container travelaja'
+            }
+        }
+    } // <<< ✅ closes 'stages' block
 
     post {
         always {

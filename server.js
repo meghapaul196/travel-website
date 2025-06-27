@@ -14,7 +14,9 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static(__dirname)); // Serve everything in root folder
+
+//app.use(express.static('public'));
 
 // Serve index.html when user accesses root
 app.get('/', (req, res) => {

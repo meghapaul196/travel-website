@@ -53,26 +53,27 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    // This block now explicitly references your SonarQube server named 'Sonarkey'.
-                    withSonarQubeEnv('Sonarkey') {
-                        // For a JavaScript/HTML/CSS project, SonarQube Scanner usually works well
-                        // with default settings, but you can specify properties here if needed.
-                        sh '''
-                            ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=travelaja \
-                            -Dsonar.projectName="Travelaja Website" \
-                            -Dsonar.sources=. \
-                            -Dsonar.exclusions=bookings.json,node_modules/** \
-                            -Dsonar.sourceEncoding=UTF-8 \
-                            -Dsonar.javascript.linter.eslint.reportPaths=eslint-report.json \
-                            -Dsonar.javascript.node.maxspace=2048
-                        '''
-                    }
-                }
+   stage('SonarQube Analysis') {
+    steps {
+        script {
+            // This block now explicitly references your SonarQube server named 'Sonarkey'.
+            withSonarQubeEnv('Sonarkey') {
+                // For a JavaScript/HTML/CSS project, SonarQube Scanner usually works well
+                // with default settings, but you can specify properties here if needed.
+                sh '''
+                    sonar-scanner \  // <-- CHANGE THIS LINE: Removed ${scannerHome}/bin/
+                    -Dsonar.projectKey=travelaja \
+                    -Dsonar.projectName="Travelaja Website" \
+                    -Dsonar.sources=. \
+                    -Dsonar.exclusions=bookings.json,node_modules/** \
+                    -Dsonar.sourceEncoding=UTF-8 \
+                    -Dsonar.javascript.linter.eslint.reportPaths=eslint-report.json \
+                    -Dsonar.javascript.node.maxspace=2048
+                '''
             }
+        }
+    }
+}
             post {
                 failure {
                     // You can add logic here to fail the build if Quality Gate fails

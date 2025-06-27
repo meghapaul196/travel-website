@@ -1,19 +1,25 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const cors = require('cors');  // Import the CORS package
+const cors = require('cors');
+
 const app = express();
 const PORT = 5500;
 
 app.use(cors({
-    origin: 'http://127.0.0.1:5500',  // Allow requests from your frontend
-    methods: ['GET', 'POST'],  // Allow specific methods
-    allowedHeaders: ['Content-Type'],  // Allow specific headers
+    origin: 'http://127.0.0.1:5500',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+// Serve index.html when user accesses root
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 const bookingsFile = path.join(__dirname, 'bookings.json');
 

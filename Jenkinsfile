@@ -58,17 +58,16 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                echo 'Starting deployment...'
-                bat '''
-                    for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5500') do taskkill /F /PID %%a >nul 2>&1 || echo No process running on port 5500
-                    start /b cmd /c "node server.js > server.log 2>&1"
-                '''
-                echo 'Node.js server started on port 5500.'
-            }
-        } 
-    } 
+        stage('Docker Build & Run') {
+    steps {
+        echo 'Building Docker image and starting container...'
+        bat 'docker build -t travelaja .'
+        bat 'docker stop travelaja_container || echo Container not running'
+        bat 'docker rm travelaja_container || echo Container not found'
+        bat 'docker run -d -p 5500:5500 --name travelaja_container travelaja'
+    }
+}
+
 
     post {
         always {

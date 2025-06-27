@@ -58,7 +58,7 @@ pipeline {
             }
         }
 
-                stage('Docker Build & Run') {
+        stage('Docker Build & Run') {
             steps {
                 echo 'Building Docker image and starting container...'
                 bat '''
@@ -78,6 +78,7 @@ pipeline {
                 '''
             }
         }
+    } // ✅ This was missing!
 
     post {
         always {

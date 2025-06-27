@@ -58,17 +58,17 @@ pipeline {
             }
         }
 
-       stage('Deploy') {
-    steps {
-        echo 'Starting deployment...'
-        bat '''
-            for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5500') do taskkill /F /PID %%a >nul 2>&1 || echo No process running on port 5500
-            start /b cmd /c "node server.js > server.log 2>&1"
-        '''
-        echo 'Node.js server started on port 5500.'
-    }
-}
-
+        stage('Deploy') {
+            steps {
+                echo 'Starting deployment...'
+                bat '''
+                    for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5500') do taskkill /F /PID %%a >nul 2>&1 || echo No process running on port 5500
+                    start /b cmd /c "node server.js > server.log 2>&1"
+                '''
+                echo 'Node.js server started on port 5500.'
+            }
+        } 
+    } 
 
     post {
         always {
